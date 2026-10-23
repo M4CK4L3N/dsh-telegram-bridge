@@ -69,6 +69,18 @@ Biến Telegram trên điện thoại thành trung tâm chỉ huy lập trình c
 
 ---
 
+## Yêu cầu tiền đề (Prerequisites)
+
+1. **Telegram Bot Token**: Tạo qua [@BotFather](https://t.me/BotFather).
+2. **Xử lý giọng nói Voice-to-Text (Tùy chọn)**:
+   - Cài đặt `ffmpeg` trên máy host (ví dụ: `brew install ffmpeg`).
+   - Dịch vụ `BeeRouter` chạy cục bộ tại cổng `20128` (hoặc endpoint tương thích OpenAI) để chuyển đổi âm thanh sang văn bản.
+3. **Cơ chế bảo mật & Khóa Chat ID**:
+   - Khi chưa cấu hình `chatId`, **người đầu tiên gửi tin nhắn tới bot sẽ tự động được nhận làm chủ nhân và khóa quyền duy nhất**.
+   - Nếu bot được tạo ở chế độ công khai, khuyến nghị điền rõ `chatId` trong phần cài đặt trước khi chạy bot để tránh bị tài khoản khác gửi tin nhắn nhận quyền trước.
+
+---
+
 ## Hướng dẫn cài đặt vào DSH
 
 ### Cách 1: Sử dụng DSH CLI (Khuyên dùng)

@@ -69,6 +69,18 @@ Turn your phone into a remote coding cockpit for your local DSH agent: send text
 
 ---
 
+## Prerequisites
+
+1. **Telegram Bot Token**: Created via [@BotFather](https://t.me/BotFather).
+2. **Audio / Voice-to-Text (Optional)**:
+   - `ffmpeg` installed on your host system (e.g. `brew install ffmpeg`).
+   - `BeeRouter` running locally on port `20128` (or an OpenAI-compatible speech/chat endpoint) to transcribe incoming voice notes.
+3. **Security & Chat ID Locking**:
+   - If `chatId` is left unconfigured, **the first sender to message the bot will be automatically claimed and locked as the owner**.
+   - For public or shared bots, configure your `chatId` explicitly before starting the bot to prevent unauthorized claiming.
+
+---
+
 ## Installation Guide for DSH
 
 ### Option 1: Via DSH CLI (Recommended)
