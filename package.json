@@ -16,11 +16,15 @@
     "client.js",
     "i18n.js",
     "locales/",
+    "scripts/",
     "cordis.patch.yml",
     "README.md",
     "README.ru.md",
     "README.vi.md"
   ],
+  "bin": {
+    "dsh-add-locale": "scripts/add-locale.mjs"
+  },
   "keywords": [
     "dsh",
     "deepseek-harness",

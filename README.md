@@ -50,9 +50,25 @@ The web panel (`client.js`) is localized as well and carries a language selector
 
 ### Adding a language
 
-1. Copy `locales/en.js` to `locales/<code>.js` and translate the values.
-2. Register it in `i18n.js` (`LOCALES`, `LANGUAGES`, `DICTS`) and add the date locale in `dateLocale()`.
-3. Add the option to the selector in `client.js`.
+A language lives in **four places across two files** — the server dictionary
+(`locales/`) and the settings-panel dictionary (`client.js`, which cannot import
+the server module). A script does the wiring for you:
+
+```bash
+node scripts/add-locale.mjs de Deutsch de-DE
+```
+
+That creates `locales/de.js` (239 keys, values copied from English), registers
+it in `i18n.js` (import, `LOCALES`, `LANGUAGES`, `DICTS`, `dateLocale`) and adds
+the panel dictionary plus the selector option in `client.js`. It then syntax-checks
+every touched file and prints how many keys still need translating.
+
+Arguments are validated (`deu`, `DE`, `auto` and an invalid date tag are all
+rejected up front), and re-running with the same code is a no-op.
+
+Afterwards you only translate `locales/<code>.js` and the `<code>` block in
+`client.js`. Doing it by hand is possible, but a forgotten panel dictionary
+silently falls back to Russian.
 
 ---
 
