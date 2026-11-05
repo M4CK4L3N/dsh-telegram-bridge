@@ -1,8 +1,60 @@
-# dsh-telegram-bridge
+# dsh-telegram-bridge — localized fork
 
-[English](README.md) | [Tiếng Việt](README.vi.md)
+[English](README.md) | [Русский](README.ru.md) | [Tiếng Việt](README.vi.md)
 
-Full two-way Telegram remote control, real-time progress tracking, and native OS notifications for DeepSeek Harness (DSH).
+Full two-way Telegram remote control, real-time progress tracking, and native OS notifications for DeepSeek Harness (DSH) — with a **translated interface (Russian / English / Vietnamese)**.
+
+> Fork of [datit309/dsh-telegram-bridge](https://github.com/datit309/dsh-telegram-bridge).
+> Upstream hardcodes every UI string in Vietnamese; this fork moves them into locale dictionaries.
+
+---
+
+## What this fork adds
+
+### 1. Full i18n
+
+All user-facing strings live in `locales/`:
+
+| File | Entries |
+|---|---|
+| `locales/ru.js` | 231 |
+| `locales/en.js` | 231 |
+| `locales/vi.js` | 231 |
+
+Each entry is a stable key (hash of the upstream literal) plus positional placeholders `{0}`, `{1}`:
+
+```js
+// i18n.js
+export function t(key, args) { ... }    // "⏳ *DSH [{0}]*: Agent is busy. Queued prompt: _\"{1}\"_"
+export function phrase(slot) { ... }    // for strings outside the catalogue (schema, command list)
+```
+
+Call sites in `index.js` stay readable:
+
+```js
+await tgSend(t('sce4692f3', [project, truncate(text, 60)]));
+```
+
+### 2. Language selection synced with DSH
+
+The plugin settings gained a **Language** field:
+
+- `auto` (default) — follows the DSH host interface language;
+- `ru` / `en` / `vi` — pins a language.
+
+Switching the DSH language re-localizes the bot on the fly and **re-registers the Telegram command list** (`setMyCommands`), so the `/` menu follows too. Message timestamps use the matching locale (`ru-RU`, `en-US`, `vi-VN`).
+
+### 3. Localized settings panel
+
+The web panel (`client.js`) is localized as well and carries a language selector. The client bundle cannot import the server-side `i18n.js`, so it ships its own compact dictionary.
+
+### Adding a language
+
+1. Copy `locales/en.js` to `locales/<code>.js` and translate the values.
+2. Register it in `i18n.js` (`LOCALES`, `LANGUAGES`, `DICTS`) and add the date locale in `dateLocale()`.
+3. Add the option to the selector in `client.js`.
+
+---
 
 Turn your phone into a remote coding cockpit for your local DSH agent: send text prompts, voice messages, screenshots, inspect live diffs, switch models/sessions, execute shell commands, approve tools, and download generated deliverables.
 
@@ -89,14 +141,14 @@ Run the standard `dsh plugin add` command in your terminal:
 
 ```bash
 # Install directly from GitHub into your active profile (e.g. web)
-dsh plugin --profile web add github:datit309/dsh-telegram-bridge
+dsh plugin --profile web add github:<your-name>/dsh-telegram-bridge
 ```
 
 Or install from a local checkout:
 
 ```bash
 # Clone the repository
-git clone https://github.com/datit309/dsh-telegram-bridge.git ~/dsh-telegram-bridge
+git clone https://github.com/<your-name>/dsh-telegram-bridge.git ~/dsh-telegram-bridge
 
 # Install into DSH profile
 dsh plugin --profile web add ~/dsh-telegram-bridge
@@ -113,7 +165,7 @@ dsh plugin --profile web add ~/dsh-telegram-bridge
 3. Click **Add plugin** in the top-right corner.
 4. Enter the GitHub repository specifier:
    ```text
-   github:datit309/dsh-telegram-bridge
+   github:<your-name>/dsh-telegram-bridge
    ```
 5. Click **Install**. The plugin will be downloaded, bundled, and activated automatically.
 
@@ -190,6 +242,19 @@ Open Telegram on your phone, find your bot, and send `/start`.
 
 ---
 
+## Project layout
+
+```
+index.js          server half of the plugin (no hardcoded UI strings)
+client.js         web settings panel + language selector
+i18n.js           t() / phrase(), language resolution, date locale
+locales/ru.js     Russian
+locales/en.js     English
+locales/vi.js     Vietnamese (upstream text)
+cordis.patch.yml  DSH loader manifest
+```
+
 ## License
 
-MIT
+MIT. Original plugin by [datit309](https://github.com/datit309/dsh-telegram-bridge).
+Fork changes: string extraction into dictionaries, i18n runtime, language selection, DSH locale sync, settings-panel translation.

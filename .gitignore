@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Local DSH profile state (never commit credentials)
+telegram.json
+*.credentials.yaml
+.credentials.yaml
+.env
+.env.*
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*

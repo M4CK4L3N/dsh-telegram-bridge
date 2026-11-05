@@ -5,6 +5,110 @@ window.__ModuleLoader__.load({
     const h = React.createElement;
     const { useState, useEffect } = React;
 
+    // Panel strings. The client bundle cannot import the server-side i18n module,
+    // so the panel carries its own small dictionary keyed by the same language code.
+    const STRINGS = {
+      ru: {
+        saving: 'Сохранение настроек…',
+        saved: 'Настройки сохранены',
+        saveFailed: (e) => `Не удалось сохранить: ${e || 'неизвестная ошибка'}`,
+        connError: (m) => `Ошибка соединения: ${m}`,
+        sending: 'Отправка тестового сообщения…',
+        sent: 'Тестовое сообщение отправлено в Telegram',
+        sendFailed: (e) => `Отправка не удалась: ${e}`,
+        subtitle: 'Управление Agent с телефона: запросы, изображения, shell-команды, git diff, подтверждения инструментов.',
+        tokenInvalid: 'Token пуст или неверен',
+        notConnected: 'Не подключено',
+        connect: 'Подключение',
+        hideToken: 'Скрыть token',
+        showToken: 'Показать token',
+        tokenHint: 'Получить у @BotFather при создании бота.',
+        chatPlaceholder: 'Оставь пустым и отправь /start боту — заполнится сам',
+        chatHint: 'Управлять Agent сможет только этот Chat ID.',
+        localNotif: 'Уведомления на Mac',
+        sound: 'Звук',
+        soundHint: 'Играть звук на Mac, когда Agent завершил работу или ждёт подтверждения.',
+        volume: 'Громкость',
+        banner: 'Баннер macOS',
+        bannerHint: 'Показывать системные уведомления на экране.',
+        untitled: 'Есть несохранённые изменения',
+        testTitle: 'Отправить тестовое сообщение с указанными выше token и Chat ID',
+        testNeeds: 'Нужны Bot Token и Chat ID',
+        testBtn: 'Тестовое сообщение',
+        savingBtn: 'Сохранение…',
+        saveBtn: 'Сохранить настройки',
+        language: 'Язык',
+        languageHint: 'Язык сообщений бота и этой панели.',
+        langAuto: 'Как в DSH',
+      },
+      en: {
+        saving: 'Saving settings…',
+        saved: 'Settings saved',
+        saveFailed: (e) => `Could not save: ${e || 'unknown error'}`,
+        connError: (m) => `Connection error: ${m}`,
+        sending: 'Sending test message…',
+        sent: 'Test message sent to Telegram',
+        sendFailed: (e) => `Send failed: ${e}`,
+        subtitle: 'Control the Agent from your phone: prompts, images, shell commands, git diff, tool approvals.',
+        tokenInvalid: 'Token is empty or invalid',
+        notConnected: 'Not connected',
+        connect: 'Connection',
+        hideToken: 'Hide token',
+        showToken: 'Show token',
+        tokenHint: 'Get it from @BotFather when creating the bot.',
+        chatPlaceholder: 'Leave empty and send /start to the bot to fill it in',
+        chatHint: 'Only this Chat ID may control the Agent.',
+        localNotif: 'Mac notifications',
+        sound: 'Sound',
+        soundHint: 'Play a sound on the Mac when the Agent finishes or needs approval.',
+        volume: 'Volume',
+        banner: 'macOS banner',
+        bannerHint: 'Show system notifications on screen.',
+        untitled: 'Unsaved changes',
+        testTitle: 'Send a test message using the token and Chat ID above',
+        testNeeds: 'Bot Token and Chat ID are required',
+        testBtn: 'Send test',
+        savingBtn: 'Saving…',
+        saveBtn: 'Save settings',
+        language: 'Language',
+        languageHint: 'Language for bot messages and this panel.',
+        langAuto: 'Same as DSH',
+      },
+      vi: {
+        saving: 'Đang lưu cấu hình…',
+        saved: 'Đã lưu cấu hình',
+        saveFailed: (e) => `Không lưu được: ${e || 'lỗi không xác định'}`,
+        connError: (m) => `Lỗi kết nối: ${m}`,
+        sending: 'Đang gửi tin nhắn thử…',
+        sent: 'Đã gửi tin nhắn thử tới Telegram',
+        sendFailed: (e) => `Gửi thất bại: ${e}`,
+        subtitle: 'Điều khiển Agent từ điện thoại: gửi prompt, ảnh, lệnh shell, xem git diff, duyệt tool.',
+        tokenInvalid: 'Token trống hoặc không hợp lệ',
+        notConnected: 'Chưa kết nối',
+        connect: 'Kết nối',
+        hideToken: 'Ẩn token',
+        showToken: 'Hiện token',
+        tokenHint: 'Lấy từ @BotFather khi tạo bot.',
+        chatPlaceholder: 'Để trống rồi gửi /start cho bot để tự điền',
+        chatHint: 'Chỉ tài khoản có Chat ID này mới được điều khiển Agent.',
+        localNotif: 'Thông báo trên máy',
+        sound: 'Âm thanh',
+        soundHint: 'Phát âm thanh trên loa Mac khi Agent xong việc hoặc cần duyệt.',
+        volume: 'Âm lượng',
+        banner: 'Banner macOS',
+        bannerHint: 'Hiện thông báo hệ thống trên màn hình.',
+        untitled: 'Có thay đổi chưa lưu',
+        testTitle: 'Gửi một tin nhắn thử bằng token và Chat ID ở trên',
+        testNeeds: 'Cần nhập Bot Token và Chat ID',
+        testBtn: 'Gửi tin thử',
+        savingBtn: 'Đang lưu…',
+        saveBtn: 'Lưu cấu hình',
+        language: 'Ngôn ngữ',
+        languageHint: 'Ngôn ngữ cho tin nhắn bot và bảng điều khiển này.',
+        langAuto: 'Như trong DSH',
+      },
+    };
+
     // Scoped stylesheet: inline styles can't express :hover/:focus-visible/:disabled.
     // Colors come from host tokens; fallbacks mix currentColor so they work in light and dark.
     const CSS = `
@@ -102,7 +206,7 @@ window.__ModuleLoader__.load({
     }
 
     function TelegramSettingsForm() {
-      const [form, setForm] = useState({ token: '', chatId: '', sound: true, notification: true, volume: 1 });
+      const [form, setForm] = useState({ token: '', chatId: '', language: 'auto', sound: true, notification: true, volume: 1 });
       const [saved, setSaved] = useState(form);
       const [showToken, setShowToken] = useState(false);
       const [botInfo, setBotInfo] = useState(null);
@@ -125,6 +229,7 @@ window.__ModuleLoader__.load({
               const next = {
                 token: data.config.token || '',
                 chatId: data.config.chatId || '',
+                language: data.config.language || 'auto',
                 sound: data.config.sound !== false,
                 notification: data.config.notification !== false,
                 volume: typeof data.config.volume === 'number' ? data.config.volume : 1,
@@ -140,7 +245,7 @@ window.__ModuleLoader__.load({
 
       const handleSave = async () => {
         setBusy(true);
-        flash('busy', 'Đang lưu cấu hình…');
+        flash('busy', L.saving);
         try {
           const res = await fetch('/api/dsh-telegram-bridge/config', {
             method: 'POST',
@@ -151,12 +256,12 @@ window.__ModuleLoader__.load({
           if (data.ok) {
             setSaved(form);
             setBotInfo(data.botInfo || null);
-            flash('ok', 'Đã lưu cấu hình', 3000);
+            flash('ok', L.saved, 3000);
           } else {
-            flash('err', `Không lưu được: ${data.error || 'lỗi không xác định'}`);
+            flash('err', L.saveFailed(data.error));
           }
         } catch (e) {
-          flash('err', `Lỗi kết nối: ${e.message}`);
+          flash('err', L.connError(e.message));
         } finally {
           setBusy(false);
         }
@@ -164,7 +269,7 @@ window.__ModuleLoader__.load({
 
       const handleTest = async () => {
         setBusy(true);
-        flash('busy', 'Đang gửi tin nhắn thử…');
+        flash('busy', L.sending);
         try {
           const res = await fetch('/api/dsh-telegram-bridge/test', {
             method: 'POST',
@@ -172,15 +277,16 @@ window.__ModuleLoader__.load({
             body: JSON.stringify({ token: form.token, chatId: form.chatId }),
           });
           const data = await res.json();
-          if (data.ok) flash('ok', 'Đã gửi tin nhắn thử tới Telegram', 4000);
-          else flash('err', `Gửi thất bại: ${data.error}`);
+          if (data.ok) flash('ok', L.sent, 4000);
+          else flash('err', L.sendFailed(data.error));
         } catch (e) {
-          flash('err', `Lỗi kết nối: ${e.message}`);
+          flash('err', L.connError(e.message));
         } finally {
           setBusy(false);
         }
       };
 
+      const L = STRINGS[form.language] || STRINGS.ru;
       const style = h('style', null, CSS);
 
       if (loading) {
@@ -199,16 +305,28 @@ window.__ModuleLoader__.load({
           h('div', { className: 'tgb-logo' }, h(IconTelegram)),
           h('div', null,
             h('h2', { className: 'tgb-title' }, 'Telegram Bridge'),
-            h('p', { className: 'tgb-sub' }, 'Điều khiển Agent từ điện thoại: gửi prompt, ảnh, lệnh shell, xem git diff, duyệt tool.')
+            h('p', { className: 'tgb-sub' }, L.subtitle)
           ),
-          h('span', { className: 'tgb-pill', title: botInfo ? botInfo.first_name : 'Token trống hoặc không hợp lệ' },
+          h('span', { className: 'tgb-pill', title: botInfo ? botInfo.first_name : L.tokenInvalid },
             h('span', { className: 'tgb-dot', style: { background: botInfo ? 'var(--tgb-ok)' : 'var(--tgb-warn)' } }),
-            botInfo ? `@${botInfo.username}` : 'Chưa kết nối')
+            botInfo ? `@${botInfo.username}` : L.notConnected)
         ),
 
         // Connection
         h('section', { className: 'tgb-card' },
-          h('div', { className: 'tgb-card-head' }, 'Kết nối'),
+          h('div', { className: 'tgb-card-head' }, L.connect),
+          h('div', { className: 'tgb-row' },
+            h('label', { className: 'tgb-label', htmlFor: 'tgb-lang' }, L.language),
+            h('select', {
+              id: 'tgb-lang', className: 'tgb-input',
+              value: form.language, onChange: (e) => set('language')(e.target.value),
+            },
+              h('option', { value: 'auto' }, L.langAuto),
+              h('option', { value: 'ru' }, 'Русский'),
+              h('option', { value: 'en' }, 'English'),
+              h('option', { value: 'vi' }, 'Tiếng Việt')),
+            h('span', { className: 'tgb-hint' }, L.languageHint)
+          ),
           h('div', { className: 'tgb-row' },
             h('label', { className: 'tgb-label', htmlFor: 'tgb-token' }, 'Bot Token'),
             h('div', { className: 'tgb-field' },
@@ -219,34 +337,34 @@ window.__ModuleLoader__.load({
               }),
               h('button', {
                 type: 'button', className: 'tgb-eye', onClick: () => setShowToken(!showToken),
-                'aria-label': showToken ? 'Ẩn token' : 'Hiện token', title: showToken ? 'Ẩn token' : 'Hiện token',
+                'aria-label': showToken ? L.hideToken : L.showToken, title: showToken ? L.hideToken : L.showToken,
               }, IconEye(!showToken))
             ),
-            h('span', { className: 'tgb-hint' }, 'Lấy từ @BotFather khi tạo bot.')
+            h('span', { className: 'tgb-hint' }, L.tokenHint)
           ),
           h('div', { className: 'tgb-row' },
             h('label', { className: 'tgb-label', htmlFor: 'tgb-chat' }, 'Chat ID'),
             h('input', {
               id: 'tgb-chat', className: 'tgb-input', type: 'text', inputMode: 'numeric',
               value: form.chatId, onChange: (e) => set('chatId')(e.target.value),
-              placeholder: 'Để trống rồi gửi /start cho bot để tự điền', autoComplete: 'off',
+              placeholder: L.chatPlaceholder, autoComplete: 'off',
             }),
-            h('span', { className: 'tgb-hint' }, 'Chỉ tài khoản có Chat ID này mới được điều khiển Agent.')
+            h('span', { className: 'tgb-hint' }, L.chatHint)
           )
         ),
 
         // Local notifications
         h('section', { className: 'tgb-card' },
-          h('div', { className: 'tgb-card-head' }, 'Thông báo trên máy'),
+          h('div', { className: 'tgb-card-head' }, L.localNotif),
           h('div', { className: 'tgb-row tgb-row-inline' },
             h('div', null,
-              h('div', { className: 'tgb-label' }, 'Âm thanh'),
-              h('div', { className: 'tgb-hint' }, 'Phát âm thanh trên loa Mac khi Agent xong việc hoặc cần duyệt.')
+              h('div', { className: 'tgb-label' }, L.sound),
+              h('div', { className: 'tgb-hint' }, L.soundHint)
             ),
-            h(Switch, { checked: form.sound, onChange: set('sound'), label: 'Âm thanh' })
+            h(Switch, { checked: form.sound, onChange: set('sound'), label: L.sound })
           ),
           h('div', { className: `tgb-row${form.sound ? '' : ' tgb-disabled'}` },
-            h('label', { className: 'tgb-label', htmlFor: 'tgb-vol' }, 'Âm lượng'),
+            h('label', { className: 'tgb-label', htmlFor: 'tgb-vol' }, L.volume),
             h('div', { className: 'tgb-range' },
               h('input', {
                 id: 'tgb-vol', type: 'range', min: 0, max: 1, step: 0.1, value: form.volume,
@@ -257,10 +375,10 @@ window.__ModuleLoader__.load({
           ),
           h('div', { className: 'tgb-row tgb-row-inline' },
             h('div', null,
-              h('div', { className: 'tgb-label' }, 'Banner macOS'),
-              h('div', { className: 'tgb-hint' }, 'Hiện thông báo hệ thống trên màn hình.')
+              h('div', { className: 'tgb-label' }, L.banner),
+              h('div', { className: 'tgb-hint' }, L.bannerHint)
             ),
-            h(Switch, { checked: form.notification, onChange: set('notification'), label: 'Banner macOS' })
+            h(Switch, { checked: form.notification, onChange: set('notification'), label: L.banner })
           )
         ),
 
@@ -269,14 +387,14 @@ window.__ModuleLoader__.load({
           h('span', { className: 'tgb-status', role: 'status', 'aria-live': 'polite', style: { color: status ? statusColor[status.kind] : undefined } },
             status
               ? [status.kind === 'ok' ? h(IconCheck, { key: 'i' }) : status.kind === 'err' ? h(IconAlert, { key: 'i' }) : null, status.text]
-              : dirty ? 'Có thay đổi chưa lưu' : null),
+              : dirty ? L.untitled : null),
           h('button', {
             type: 'button', className: 'tgb-btn', onClick: handleTest, disabled: !canTest,
-            title: canTest ? 'Gửi một tin nhắn thử bằng token và Chat ID ở trên' : 'Cần nhập Bot Token và Chat ID',
-          }, h(IconSend), 'Gửi tin thử'),
+            title: canTest ? L.testTitle : L.testNeeds,
+          }, h(IconSend), L.testBtn),
           h('button', {
             type: 'button', className: 'tgb-btn tgb-btn-primary', onClick: handleSave, disabled: busy || !dirty,
-          }, busy && status?.text.startsWith('Đang lưu') ? 'Đang lưu…' : 'Lưu cấu hình')
+          }, busy && status?.text === L.savingBtn ? L.savingBtn : L.saveBtn)
         )
       );
     }

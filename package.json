@@ -1,13 +1,38 @@
 {
   "name": "dsh-telegram-bridge",
-  "version": "1.0.0",
-  "description": "Full 2-way Telegram Remote Control, Vision, Voice, Shell, Diff & Sound Notifications for DeepSeek Harness (DSH)",
+  "version": "1.1.0",
+  "description": "Full 2-way Telegram Remote Control, Vision, Voice, Shell, Diff & Sound Notifications for DeepSeek Harness (DSH) — with i18n (ru/en/vi)",
   "type": "module",
   "main": "index.js",
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
+    "./i18n": "./i18n.js",
+    "./locales/*": "./locales/*",
     "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "i18n.js",
+    "locales/",
+    "cordis.patch.yml",
+    "README.md",
+    "README.ru.md",
+    "README.vi.md"
+  ],
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "telegram",
+    "plugin",
+    "i18n",
+    "russian"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ramil/dsh-telegram-bridge.git"
   },
   "dsh": {
     "bundle": {

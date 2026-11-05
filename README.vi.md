@@ -1,6 +1,10 @@
-# dsh-telegram-bridge
+# dsh-telegram-bridge — bản fork đa ngôn ngữ
 
-[English](README.md) | [Tiếng Việt](README.vi.md)
+> Fork của [datit309/dsh-telegram-bridge](https://github.com/datit309/dsh-telegram-bridge).
+> Bản gốc hardcode toàn bộ chuỗi giao diện bằng tiếng Việt; bản fork này đưa chúng vào các từ điển `locales/` và hỗ trợ **tiếng Nga / tiếng Anh / tiếng Việt** (`language: auto | ru | en | vi`).
+
+
+[English](README.md) | [Русский](README.ru.md) | [Tiếng Việt](README.vi.md)
 
 Plugin điều khiển từ xa 2 chiều qua Telegram, theo dõi tiến trình thời gian thực & Thông báo âm thanh toàn diện cho DeepSeek Harness (DSH).
 
@@ -89,14 +93,14 @@ Chạy lệnh chuẩn `dsh plugin add` trong terminal của bạn:
 
 ```bash
 # Cài đặt trực tiếp từ GitHub vào profile đang dùng (ví dụ: web)
-dsh plugin --profile web add github:datit309/dsh-telegram-bridge
+dsh plugin --profile web add github:<your-name>/dsh-telegram-bridge
 ```
 
 Hoặc cài đặt từ bản clone trên máy:
 
 ```bash
 # Clone repository về máy
-git clone https://github.com/datit309/dsh-telegram-bridge.git ~/dsh-telegram-bridge
+git clone https://github.com/<your-name>/dsh-telegram-bridge.git ~/dsh-telegram-bridge
 
 # Cài đặt vào profile DSH
 dsh plugin --profile web add ~/dsh-telegram-bridge
@@ -113,7 +117,7 @@ dsh plugin --profile web add ~/dsh-telegram-bridge
 3. Bấm nút **Thêm plugin (Add plugin)** ở góc trên bên phải.
 4. Nhập đường dẫn GitHub:
    ```text
-   github:datit309/dsh-telegram-bridge
+   github:<your-name>/dsh-telegram-bridge
    ```
 5. Bấm **Cài đặt (Install)**. DSH sẽ tự động tải, đóng gói và kích hoạt plugin.
 
